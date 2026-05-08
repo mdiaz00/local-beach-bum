@@ -33,7 +33,6 @@ export default function LocalBeachBum() {
     { id: 5, name: 'Fishing Hat Collection', price: 48, image: '🎩' },
   ];
 
-  // Auto-advance slides every 5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setSlideIndex((prev) => (prev + 1) % crewCatches.length);
@@ -85,7 +84,7 @@ export default function LocalBeachBum() {
           <p style={{ color: accentColor, fontSize: '14px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', borderTop: `1px solid ${accentColor}`, borderBottom: `1px solid ${accentColor}`, padding: '1rem 0' }}>Locals Only</p>
 
           <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', padding: '2rem', marginBottom: '1.5rem' }}>
-            <p style={{ color: '#ccc', fontSize: '12px', marginBottom: '1.5rem 0', textTransform: 'uppercase', letterSpacing: '1px', margin: '0 0 1.5rem 0' }}>Exclusive early access</p>
+            <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 1.5rem 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Exclusive early access</p>
 
             <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
               <div style={{ position: 'relative' }}>
@@ -97,12 +96,12 @@ export default function LocalBeachBum() {
               <button type="submit" style={{ background: accentColor, color: '#0d0d0d', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', cursor: 'pointer' }} onMouseEnter={(e) => (e.target.style.background = accentColorHover)} onMouseLeave={(e) => (e.target.style.background = accentColor)}>Unlock</button>
             </form>
 
-            {authError && <p style={{ color: '#ff6b6b', fontSize: '13px', marginTop: '1rem', background: 'rgba(255, 107, 107, 0.1)', padding: '0.75rem', borderRadius: '4px', border: '1px solid rgba(255, 107, 107, 0.3)', margin: '1rem 0 0 0' }}>
+            {authError && <p style={{ color: '#ff6b6b', fontSize: '13px', margin: '1rem 0 0 0', background: 'rgba(255, 107, 107, 0.1)', padding: '0.75rem', borderRadius: '4px', border: '1px solid rgba(255, 107, 107, 0.3)' }}>
               {authError}
             </p>}
           </div>
 
-          <p style={{ color: '#666', fontSize: '12px', marginTop: '2rem', margin: '2rem 0 0 0' }}>Premium fishing apparel for the crew. Monthly drops. Invitation only.</p>
+          <p style={{ color: '#666', fontSize: '12px', margin: '2rem 0 0 0' }}>Premium fishing apparel for the crew. Monthly drops. Invitation only.</p>
         </div>
       </div>
     );
@@ -110,11 +109,10 @@ export default function LocalBeachBum() {
 
   return (
     <div style={{ background: '#0d0d0d', color: '#fff', minHeight: '100vh', fontFamily: "'Helvetica Neue', sans-serif" }}>
-      {/* Navigation */}
       <nav style={{ background: '#1a1a1a', borderBottom: '1px solid #333', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
         <button onClick={() => setPage('home')} style={{ fontSize: '16px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor, background: 'none', border: 'none', cursor: 'pointer' }}>LBB</button>
 
-        <div style={{ display: 'flex', gap: '2rem', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }} className="desktop-nav">
+        <div style={{ display: 'flex', gap: '2rem', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>
           {['home', 'shop', 'about', 'community'].map((p) => (
             <button key={p} onClick={() => setPage(p)} style={{ background: 'none', border: 'none', color: page === p ? accentColor : '#999', cursor: 'pointer', transition: 'color 0.2s', fontSize: '13px' }} onMouseEnter={(e) => (e.target.style.color = page === p ? accentColor : '#ccc')} onMouseLeave={(e) => (e.target.style.color = page === p ? accentColor : '#999')}>
               {p}
@@ -128,7 +126,6 @@ export default function LocalBeachBum() {
         </button>
       </nav>
 
-      {/* Cart Sidebar */}
       {showCart && (
         <div style={{ position: 'fixed', top: 0, right: 0, width: '100%', maxWidth: '400px', height: '100vh', background: '#1a1a1a', borderLeft: '1px solid #333', zIndex: 200, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', borderBottom: '1px solid #333' }}>
@@ -164,29 +161,25 @@ export default function LocalBeachBum() {
         </div>
       )}
 
-      {/* HOME PAGE */}
       {page === 'home' && (
         <div>
-          {/* Slideshow */}
           <div style={{ position: 'relative', height: '80vh', background: '#1a1a1a', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
             <div style={{ textAlign: 'center', zIndex: 10 }}>
               <h1 style={{ fontSize: '48px', margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '4px', color: accentColor, fontWeight: 'bold' }}>Local</h1>
               <h1 style={{ fontSize: '48px', margin: '0 0 1.5rem 0', textTransform: 'uppercase', letterSpacing: '4px', color: accentColor, fontWeight: 'bold' }}>Beach Bum</h1>
               <p style={{ fontSize: '16px', margin: '0 0 2rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold', borderTop: `1px solid ${accentColor}`, borderBottom: `1px solid ${accentColor}`, padding: '1rem 0' }}>Locals Only</p>
 
-              <div style={{ marginBottom: '2rem', animation: 'pulse 2s infinite' }}>
-                <img src="/images/fish-logo.png" alt="Fish Logo" style={{ width: '120px', height: '120px' }} />
+              <div style={{ marginBottom: '2rem', animation: 'pulse 2s infinite', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '140px' }}>
+                <img src="/images/fish-logo.png" alt="Fish Logo" style={{ width: '120px', height: '120px', objectFit: 'contain', maxWidth: '100%' }} />
               </div>
 
               <h2 style={{ fontSize: '18px', margin: '0 0 0.5rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>{crewCatches[slideIndex].caption}</h2>
               <p style={{ color: '#999', fontSize: '14px', margin: 0 }}>{crewCatches[slideIndex].by}</p>
             </div>
 
-            {/* Arrows */}
             <button onClick={prevSlide} style={{ position: 'absolute', left: '1.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: `1px solid ${accentColor}`, color: accentColor, cursor: 'pointer', padding: '0.75rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20 }}><ChevronLeft size={24} /></button>
             <button onClick={nextSlide} style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: `1px solid ${accentColor}`, color: accentColor, cursor: 'pointer', padding: '0.75rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20 }}><ChevronRight size={24} /></button>
 
-            {/* Dots */}
             <div style={{ position: 'absolute', bottom: '1.5rem', display: 'flex', gap: '0.5rem', zIndex: 20 }}>
               {crewCatches.map((_, i) => (
                 <button key={i} onClick={() => setSlideIndex(i)} style={{ width: slideIndex === i ? '24px' : '6px', height: '6px', background: slideIndex === i ? accentColor : '#666', border: 'none', borderRadius: '3px', cursor: 'pointer', transition: 'all 0.3s' }} />
@@ -194,7 +187,6 @@ export default function LocalBeachBum() {
             </div>
           </div>
 
-          {/* Latest Drop */}
           <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
             <h2 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>Latest Drop</h2>
 
@@ -212,7 +204,6 @@ export default function LocalBeachBum() {
         </div>
       )}
 
-      {/* SHOP PAGE */}
       {page === 'shop' && (
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem' }}>
           <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>All Products</h1>
@@ -230,7 +221,6 @@ export default function LocalBeachBum() {
         </div>
       )}
 
-      {/* ABOUT PAGE */}
       {page === 'about' && (
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem' }}>
           <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>About Us</h1>
@@ -259,14 +249,13 @@ export default function LocalBeachBum() {
         </div>
       )}
 
-      {/* COMMUNITY PAGE */}
       {page === 'community' && (
         <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem' }}>
           <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>Community</h1>
 
           <div style={{ background: '#1a1a1a', border: `2px solid ${accentColor}`, borderRadius: '4px', padding: '2rem', marginBottom: '3rem' }}>
             <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', textTransform: 'uppercase', letterSpacing: '1px', color: accentColor }}>Share Your Catch</h2>
-            <p style={{ color: '#999', marginBottom: '1.5rem', margin: '0 0 1.5rem 0', fontSize: '14px' }}>Submit your latest fishing photo to be featured on the homepage.</p>
+            <p style={{ color: '#999', margin: '0 0 1.5rem 0', fontSize: '14px' }}>Submit your latest fishing photo to be featured on the homepage.</p>
 
             <div style={{ background: '#0d0d0d', border: '2px dashed #333', borderRadius: '4px', padding: '2rem', textAlign: 'center', marginBottom: '1.5rem', cursor: 'pointer' }} onMouseEnter={(e) => (e.currentTarget.style.borderColor = accentColor)} onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#333')}>
               <p style={{ margin: '0 0 1rem 0', fontSize: '40px' }}>📸</p>
@@ -300,7 +289,6 @@ export default function LocalBeachBum() {
         </div>
       )}
 
-      {/* Footer */}
       <footer style={{ borderTop: '1px solid #333', marginTop: '3rem', padding: '1.5rem', textAlign: 'center', color: '#666', fontSize: '12px' }}>
         <p style={{ margin: 0 }}>© 2026 Local Beach Bum. Locals Only.</p>
       </footer>
