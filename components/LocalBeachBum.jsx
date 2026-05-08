@@ -12,6 +12,10 @@ export default function LocalBeachBum() {
   const [showPassword, setShowPassword] = useState(false);
   const [authError, setAuthError] = useState('');
   const [slideIndex, setSlideIndex] = useState(0);
+  const [email, setEmail] = useState('');
+  const [subscribed, setSubscribed] = useState(false);
+  const [subscribing, setSubscribing] = useState(false);
+  const [showPasswordField, setShowPasswordField] = useState(false);
 
   const correctPassword = 'LocalBeachBum2025';
   const accentColor = '#f5f5f5';
@@ -52,6 +56,28 @@ export default function LocalBeachBum() {
     }
   };
 
+  const handleSubscribe = async (e) => {
+    e.preventDefault();
+    setSubscribing(true);
+    
+    try {
+      await fetch('/api/send-email', {
+        method: 'POST',
+        body: JSON.stringify({
+          email: email,
+          subject: '🎣 Local Beach Bum - You\'re On The List!',
+          message: 'Welcome to Local Beach Bum! We\'re exclusive fishing apparel for the crew. You\'re on the notification list. We\'ll be in touch soon.'
+        })
+      });
+      setSubscribed(true);
+      setEmail('');
+      setTimeout(() => setSubscribed(false), 5000);
+    } catch (error) {
+      console.error('Error subscribing:', error);
+    }
+    setSubscribing(false);
+  };
+
   const nextSlide = () => {
     setSlideIndex((prev) => (prev + 1) % crewCatches.length);
   };
@@ -78,28 +104,141 @@ export default function LocalBeachBum() {
   if (!isAuthenticated) {
     return (
       <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', fontFamily: "'Helvetica Neue', sans-serif" }}>
-        <div style={{ background: '#0f0f0f', border: `2px solid ${accentColor}`, borderRadius: '8px', padding: '3rem', maxWidth: '450px', width: '100%', textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '1.5rem' }}>🐟</div>
+        <div style={{ background: '#0f0f0f', border: `2px solid ${accentColor}`, borderRadius: '8px', padding: '3rem', maxWidth: '500px', width: '100%', textAlign: 'center' }}>
+          <div style={{ fontSize: '48px', marginBottom: '1.5rem' }}>🎣</div>
           <h1 style={{ fontSize: '28px', color: accentColor, margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>Local Beach Bum</h1>
           <p style={{ color: accentColor, fontSize: '14px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', borderTop: `1px solid ${accentColor}`, borderBottom: `1px solid ${accentColor}`, padding: '1rem 0' }}>Locals Only</p>
 
           <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', padding: '2rem', marginBottom: '1.5rem' }}>
-            <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 1.5rem 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Exclusive early access</p>
+            <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 1.5rem 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Coming Soon</p>
 
-            <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <div style={{ position: 'relative' }}>
-                <input type={showPassword ? 'text' : 'password'} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Enter password" style={{ width: '100%', padding: '0.75rem 2.5rem 0.75rem 0.75rem', background: '#0f0f0f', border: '1px solid #333', borderRadius: '4px', color: '#fff', fontSize: '14px', boxSizing: 'border-box' }} />
-                <button type="button" onClick={() => setShowPassword(!showPassword)} style={{ position: 'absolute', right: '0.75rem', top: '50%', transform: 'translateY(-50%)', background: 'none', border: 'none', color: '#666', cursor: 'pointer', padding: '0.5rem' }}>
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+            <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
+              <div>
+                <input 
+                  type="email" 
+                  value={email} 
+                  onChange={(e) => setEmail(e.target.value)} 
+                  placeholder="Enter your email"
+                  required
+                  disabled={subscribed || subscribing}
+                  style={{ 
+                    width: '100%', 
+                    padding: '0.75rem', 
+                    background: '#0f0f0f', 
+                    border: '1px solid #333', 
+                    borderRadius: '4px', 
+                    color: '#fff', 
+                    fontSize: '14px', 
+                    boxSizing: 'border-box',
+                    opacity: subscribed ? 0.5 : 1
+                  }} 
+                />
               </div>
-              <button type="submit" style={{ background: accentColor, color: '#0d0d0d', border: 'none', padding: '0.75rem', borderRadius: '4px', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', cursor: 'pointer' }} onMouseEnter={(e) => (e.target.style.background = accentColorHover)} onMouseLeave={(e) => (e.target.style.background = accentColor)}>Unlock</button>
+              <button 
+                type="submit" 
+                disabled={subscribing || subscribed}
+                style={{ 
+                  background: subscribed ? '#4ade80' : accentColor, 
+                  color: subscribed ? '#000' : '#0d0d0d', 
+                  border: 'none', 
+                  padding: '0.75rem', 
+                  borderRadius: '4px', 
+                  fontSize: '14px', 
+                  fontWeight: 'bold', 
+                  textTransform: 'uppercase', 
+                  letterSpacing: '1px', 
+                  cursor: subscribing || subscribed ? 'default' : 'pointer',
+                  opacity: subscribing || subscribed ? 0.7 : 1
+                }} 
+                onMouseEnter={(e) => !subscribing && !subscribed && (e.target.style.background = accentColorHover)}
+                onMouseLeave={(e) => !subscribing && !subscribed && (e.target.style.background = accentColor)}
+              >
+                {subscribing ? 'Subscribing...' : subscribed ? '✓ Check Your Email' : 'Get Notified'}
+              </button>
             </form>
 
             {authError && <p style={{ color: '#ff6b6b', fontSize: '13px', margin: '1rem 0 0 0', background: 'rgba(255, 107, 107, 0.1)', padding: '0.75rem', borderRadius: '4px', border: '1px solid rgba(255, 107, 107, 0.3)' }}>
               {authError}
             </p>}
+
+            {showPasswordField && (
+              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem', borderTop: '1px solid #333', paddingTop: '1.5rem' }}>
+                <p style={{ color: '#666', fontSize: '11px', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontStyle: 'italic' }}>Early Access</p>
+                <div style={{ position: 'relative' }}>
+                  <input 
+                    type={showPassword ? 'text' : 'password'} 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    placeholder="Enter password" 
+                    style={{ 
+                      width: '100%', 
+                      padding: '0.75rem 2.5rem 0.75rem 0.75rem', 
+                      background: '#0f0f0f', 
+                      border: '1px solid #333', 
+                      borderRadius: '4px', 
+                      color: '#fff', 
+                      fontSize: '14px', 
+                      boxSizing: 'border-box' 
+                    }} 
+                  />
+                  <button 
+                    type="button" 
+                    onClick={() => setShowPassword(!showPassword)} 
+                    style={{ 
+                      position: 'absolute', 
+                      right: '0.75rem', 
+                      top: '50%', 
+                      transform: 'translateY(-50%)', 
+                      background: 'none', 
+                      border: 'none', 
+                      color: '#666', 
+                      cursor: 'pointer', 
+                      padding: '0.5rem' 
+                    }}
+                  >
+                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+                  </button>
+                </div>
+                <button 
+                  type="submit" 
+                  style={{ 
+                    background: '#666', 
+                    color: '#fff', 
+                    border: 'none', 
+                    padding: '0.75rem', 
+                    borderRadius: '4px', 
+                    fontSize: '14px', 
+                    fontWeight: 'bold', 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '1px', 
+                    cursor: 'pointer' 
+                  }} 
+                  onMouseEnter={(e) => (e.target.style.background = '#888')}
+                  onMouseLeave={(e) => (e.target.style.background = '#666')}
+                >
+                  Unlock
+                </button>
+              </form>
+            )}
           </div>
+
+          <button
+            onClick={() => setShowPasswordField(!showPasswordField)}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#555',
+              fontSize: '11px',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              padding: 0,
+              margin: 0
+            }}
+            onMouseEnter={(e) => (e.target.style.color = '#777')}
+            onMouseLeave={(e) => (e.target.style.color = '#555')}
+          >
+            {showPasswordField ? 'Hide' : 'Early access?'}
+          </button>
 
           <p style={{ color: '#666', fontSize: '12px', margin: '2rem 0 0 0' }}>Premium fishing apparel for the crew. Monthly drops. Invitation only.</p>
         </div>
