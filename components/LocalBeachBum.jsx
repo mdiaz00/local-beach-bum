@@ -170,7 +170,7 @@ export default function LocalBeachBum() {
               <p style={{ fontSize: '16px', margin: '0 0 2rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold', borderTop: `1px solid ${accentColor}`, borderBottom: `1px solid ${accentColor}`, padding: '1rem 0' }}>Locals Only</p>
 
               <div style={{ marginBottom: '2rem', animation: 'pulse 2s infinite', display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '140px' }}>
-                <img src="/images/fish-logo.png" alt="Fish Logo" style={{ width: '120px', height: '120px', objectFit: 'contain', maxWidth: '100%' }} />
+                <img src="https://imgur.com/a/DOiDYAI" alt="Fish Logo" style={{ width: '120px', height: '120px', objectFit: 'contain', maxWidth: '100%' }} />
               </div>
 
               <h2 style={{ fontSize: '18px', margin: '0 0 0.5rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>{crewCatches[slideIndex].caption}</h2>
