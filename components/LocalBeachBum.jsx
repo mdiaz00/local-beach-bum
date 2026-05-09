@@ -13,6 +13,7 @@ export default function LocalBeachBum() {
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [modalImageIndex, setModalImageIndex] = useState(0);
+  const [homeProductImageIndex, setHomeProductImageIndex] = useState({});
 
   const allPhotos = [
     // { id: 1, emoji: '🎣', name: 'James M.', caption: 'Caught this beauty in the Predator Cap' },
@@ -384,15 +385,47 @@ export default function LocalBeachBum() {
                 <div 
                   key={product.id} 
                   onClick={() => setSelectedProduct(product)}
-                  style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
+                  style={{ background: '#1a1a1a', border: '1px solid #222', padding: '1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#ff6b35'; e.currentTarget.style.background = '#1f1f1f'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
                 >
-                  <img 
-                    src={product.images[0]} 
-                    alt={product.name}
-                    style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem', cursor: 'pointer' }}
-                  />
+                  {/* Image Carousel */}
+                  <div style={{ position: 'relative', marginBottom: '1rem', background: '#0f0f0f', borderRadius: '4px', overflow: 'hidden', height: '180px' }}>
+                    <img 
+                      src={product.images[homeProductImageIndex[product.id] || 0]} 
+                      alt={product.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '0.5rem' }}
+                    />
+                    
+                    {product.images.length > 1 && (
+                      <>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: (homeProductImageIndex[product.id] || 0) - 1 + product.images.length) % product.images.length}); }}
+                          style={{ position: 'absolute', left: '0.25rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '12px' }}
+                        >
+                          ‹
+                        </button>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: ((homeProductImageIndex[product.id] || 0) + 1) % product.images.length}); }}
+                          style={{ position: 'absolute', right: '0.25rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '12px' }}
+                        >
+                          ›
+                        </button>
+
+                        {/* Dots */}
+                        <div style={{ position: 'absolute', bottom: '0.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.25rem' }}>
+                          {product.images.map((_, i) => (
+                            <button
+                              key={i}
+                              onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: i}); }}
+                              style={{ width: (homeProductImageIndex[product.id] || 0) === i ? '8px' : '5px', height: '5px', background: (homeProductImageIndex[product.id] || 0) === i ? '#ff6b35' : '#555', border: 'none', borderRadius: '3px', cursor: 'pointer', transition: 'all 0.2s' }}
+                            />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  
                   <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: '#f5f5f5' }}>
                     {product.name}
                   </h3>
@@ -424,16 +457,48 @@ export default function LocalBeachBum() {
             {products.filter(p => p.inStock).map((product) => (
               <div 
                 key={product.id} 
-                style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
+                style={{ background: '#1a1a1a', border: '1px solid #222', padding: '1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
                 onClick={() => setSelectedProduct(product)}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#ff6b35'; e.currentTarget.style.background = '#1f1f1f'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
               >
-                <img 
-                  src={product.images[0]} 
-                  alt={product.name}
-                  style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
-                />
+                {/* Image Carousel */}
+                <div style={{ position: 'relative', marginBottom: '1rem', background: '#0f0f0f', borderRadius: '4px', overflow: 'hidden', height: '180px' }}>
+                  <img 
+                    src={product.images[homeProductImageIndex[product.id] || 0]} 
+                    alt={product.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'contain', padding: '0.5rem' }}
+                  />
+                  
+                  {product.images.length > 1 && (
+                    <>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: (homeProductImageIndex[product.id] || 0) - 1 + product.images.length) % product.images.length}); }}
+                        style={{ position: 'absolute', left: '0.25rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '12px' }}
+                      >
+                        ‹
+                      </button>
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: ((homeProductImageIndex[product.id] || 0) + 1) % product.images.length}); }}
+                        style={{ position: 'absolute', right: '0.25rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '12px' }}
+                      >
+                        ›
+                      </button>
+
+                      {/* Dots */}
+                      <div style={{ position: 'absolute', bottom: '0.5rem', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '0.25rem' }}>
+                        {product.images.map((_, i) => (
+                          <button
+                            key={i}
+                            onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: i}); }}
+                            style={{ width: (homeProductImageIndex[product.id] || 0) === i ? '8px' : '5px', height: '5px', background: (homeProductImageIndex[product.id] || 0) === i ? '#ff6b35' : '#555', border: 'none', borderRadius: '3px', cursor: 'pointer', transition: 'all 0.2s' }}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </div>
+
                 <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: '#f5f5f5' }}>
                   {product.name}
                 </h3>
@@ -441,7 +506,7 @@ export default function LocalBeachBum() {
                   ${product.price}
                 </p>
                 <button 
-                  onClick={(e) => { e.stopPropagation(); addToCart(product); }}
+                  onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}
                   style={{ width: '100%', background: '#ff6b35', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }}
                   onMouseEnter={(e) => (e.target.style.background = '#ff5722')}
                   onMouseLeave={(e) => (e.target.style.background = '#ff6b35')}
