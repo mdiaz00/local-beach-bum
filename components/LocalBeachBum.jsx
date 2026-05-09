@@ -43,7 +43,7 @@ export default function LocalBeachBum() {
     { label: 'Home', id: 'home' },
     { label: 'Shop', id: 'shop' },
     { label: 'About', id: 'about' },
-    { label: 'Community', id: 'community' },
+    { label: 'Contact', id: 'contact' },
     { label: 'Settings', id: 'settings' },
   ];
 
@@ -543,17 +543,61 @@ export default function LocalBeachBum() {
         </div>
       )}
 
-      {/* COMMUNITY PAGE */}
-      {page === 'community' && (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '3rem 1.5rem', textAlign: 'center' }}>
-          <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>Community</h1>
-          
-          <div style={{ background: '#1a1a1a', border: '2px solid #ff6b35', borderRadius: '8px', padding: '3rem', textAlign: 'center' }}>
-            <div style={{ fontSize: '60px', marginBottom: '1rem' }}>🚀</div>
-            <h2 style={{ fontSize: '24px', margin: '0 0 1rem 0', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Coming Soon</h2>
-            <p style={{ margin: 0, color: '#999', fontSize: '14px', lineHeight: '1.6' }}>
-              The community section is under development. This is where the crew will share catches, stories, and moments together.
-            </p>
+      {/* CONTACT PAGE */}
+      {page === 'contact' && (
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+          <h1 style={{ fontSize: '32px', margin: '0 0 3rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>Contact Us</h1>
+
+          <div style={{ display: 'grid', gap: '2rem' }}>
+            {/* Contact Form */}
+            <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '2rem' }}>
+              <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '18px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Get In Touch</h2>
+              
+              <form style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', color: '#999', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Name</label>
+                  <input type="text" placeholder="Your name" style={{ width: '100%', background: '#0f0f0f', border: '1px solid #333', color: '#f5f5f5', padding: '0.75rem', borderRadius: '4px', fontSize: '14px' }} />
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', color: '#999', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Email</label>
+                  <input type="email" placeholder="your@email.com" style={{ width: '100%', background: '#0f0f0f', border: '1px solid #333', color: '#f5f5f5', padding: '0.75rem', borderRadius: '4px', fontSize: '14px' }} />
+                </div>
+                
+                <div>
+                  <label style={{ display: 'block', fontSize: '14px', color: '#999', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Message</label>
+                  <textarea placeholder="Your message..." rows="5" style={{ width: '100%', background: '#0f0f0f', border: '1px solid #333', color: '#f5f5f5', padding: '0.75rem', borderRadius: '4px', fontSize: '14px', fontFamily: 'inherit', resize: 'vertical' }} />
+                </div>
+                
+                <button style={{ background: '#ff6b35', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }} 
+                  onMouseEnter={(e) => (e.target.style.background = '#ff5722')}
+                  onMouseLeave={(e) => (e.target.style.background = '#ff6b35')}
+                >
+                  Send Message
+                </button>
+              </form>
+            </div>
+
+            {/* Contact Info */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '1.5rem' }}>
+              <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '1.5rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '32px', marginBottom: '1rem' }}>📧</div>
+                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '14px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Email</h3>
+                <p style={{ margin: 0, color: '#ccc', fontSize: '14px' }}>info@localbeachbum.com</p>
+              </div>
+
+              <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '1.5rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '32px', marginBottom: '1rem' }}>📍</div>
+                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '14px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Location</h3>
+                <p style={{ margin: 0, color: '#ccc', fontSize: '14px' }}>California, USA</p>
+              </div>
+
+              <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '1.5rem', textAlign: 'center' }}>
+                <div style={{ fontSize: '32px', marginBottom: '1rem' }}>⏱️</div>
+                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '14px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Response Time</h3>
+                <p style={{ margin: 0, color: '#ccc', fontSize: '14px' }}>24 hours</p>
+              </div>
+            </div>
           </div>
         </div>
       )}
