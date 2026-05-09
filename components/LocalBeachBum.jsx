@@ -149,8 +149,8 @@ export default function LocalBeachBum() {
             </button>
 
             {/* Product Image Carousel */}
-            <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
-              <img src={selectedProduct.images[modalImageIndex]} alt={selectedProduct.name} style={{ width: '100%', height: '250px', objectFit: 'cover', borderRadius: '4px' }} />
+            <div style={{ position: 'relative', marginBottom: '1.5rem', background: '#0f0f0f', borderRadius: '4px', overflow: 'hidden' }}>
+              <img src={selectedProduct.images[modalImageIndex]} alt={selectedProduct.name} style={{ width: '100%', height: '400px', objectFit: 'contain', padding: '1rem', background: '#0f0f0f', transition: 'opacity 0.3s ease-in-out' }} />
               
               {selectedProduct.images.length > 1 && (
                 <>
