@@ -1,90 +1,53 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { ShoppingCart, X, Eye, EyeOff, ChevronRight, ChevronLeft } from 'lucide-react';
+import { ShoppingCart, X, Menu, ChevronRight, ChevronLeft } from 'lucide-react';
 
 export default function LocalBeachBum() {
   const [page, setPage] = useState('home');
   const [cart, setCart] = useState([]);
   const [showCart, setShowCart] = useState(false);
-  const [password, setPassword] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [authError, setAuthError] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
-  const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
-  const [subscribing, setSubscribing] = useState(false);
-  const [showPasswordField, setShowPasswordField] = useState(false);
 
-  const correctPassword = 'LocalBeachBum2025';
-  const accentColor = '#f5f5f5';
-  const accentColorHover = '#d0d0d0';
-
-  const crewCatches = [
-    { id: 1, emoji: '🎣', caption: 'Monster bass caught at dawn', by: '@fisherman_joe' },
-    { id: 2, emoji: '🌅', caption: 'Golden hour paradise', by: '@sunrise_crew' },
-    { id: 3, emoji: '🐟', caption: 'Trophy largemouth', by: '@bass_master' },
-    { id: 4, emoji: '⚓', caption: 'Night fishing vibes', by: '@night_fisher' },
-    { id: 5, emoji: '🏖️', caption: 'Crew gathering moment', by: '@local_vibes' },
+  const allPhotos = [
+    // { id: 1, emoji: '🎣', name: 'James M.', caption: 'Caught this beauty in the Predator Cap' },
+    // { id: 2, emoji: '🌅', name: 'Sarah L.', caption: 'Early morning session in tech shirt' },
+    // { id: 3, emoji: '🐟', name: 'Marcus K.', caption: 'Trophy bass in crew neck hoodie' },
+    // { id: 4, emoji: '⚓', name: 'Tyler D.', caption: 'Night vibes with the bum crew' },
+    // { id: 5, emoji: '🏖️', name: 'Alex R.', caption: 'Beach bum shorts, perfect fit' },
+    // { id: 6, emoji: '🎽', name: 'Chris P.', caption: 'Hoodie saved me from cold mornings' },
+    { id: 7, image: '/images/front-page-image-2.jpeg', name: 'Team Photo', caption: 'Mark - Nice size Sand Bass!' },
+    { id: 8, image: '/images/front-page-image-3.jpeg', name: 'Team Photo', caption: 'Mark - with the solid White Sea Bass' },
+    { id: 9, image: '/images/front-page-image-4.jpeg', name: 'Team Photo', caption: 'Mark - Aboard ArtemisCharters' },
   ];
 
+  // Filter only slides that have either emoji or image
+  const customerPhotos = allPhotos.filter(photo => photo.emoji || photo.image);
+
   const products = [
-    { id: 1, name: 'The Predator Cap', price: 32, image: '🧢' },
-    { id: 2, name: 'Tech Fishing Shirt', price: 65, image: '👕' },
-    { id: 3, name: 'Beach Bum Shorts', price: 55, image: '🩳' },
-    { id: 4, name: 'Crew Neck Hoodie', price: 85, image: '🎽' },
-    { id: 5, name: 'Fishing Hat Collection', price: 48, image: '🎩' },
+    { id: 1, name: 'The Predator Cap', price: 32, image: '/images/nav-bar-logo.png', inStock: true },
+    { id: 2, name: 'Tech Fishing Shirt', price: 65, image: '/images/skull-2-shirt.PNG', inStock: true },
+    { id: 3, name: 'Beach Bum Shorts', price: 55, image: '/images/chill-shirt.PNG', inStock: true },
+    { id: 4, name: 'Crew Neck Hoodie', price: 85, image: '/images/skull-shirt.PNG', inStock: true },
+    { id: 5, name: 'Fishing Hat Collection', price: 48, image: '/images/front-page-logo.png', inStock: false },
+    { id: 6, name: 'UV Protection Gloves', price: 28, image: '/images/fish-logo.png', inStock: true },
+  ];
+
+  const menuItems = [
+    { label: 'Home', id: 'home' },
+    { label: 'Shop', id: 'shop' },
+    { label: 'About', id: 'about' },
+    { label: 'Community', id: 'community' },
+    { label: 'Settings', id: 'settings' },
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setSlideIndex((prev) => (prev + 1) % crewCatches.length);
+      setSlideIndex((prev) => (prev + 1) % customerPhotos.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, [crewCatches.length]);
-
-  const handleLogin = (e) => {
-    e.preventDefault();
-    if (password === correctPassword) {
-      setIsAuthenticated(true);
-      setAuthError('');
-      setPassword('');
-      setPage('home');
-    } else {
-      setAuthError('Invalid password');
-    }
-  };
-
-  const handleSubscribe = async (e) => {
-    e.preventDefault();
-    setSubscribing(true);
-    
-    try {
-      await fetch('/api/send-email', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: email,
-          subject: '🎣 Local Beach Bum - You\'re On The List!',
-          message: 'Welcome to Local Beach Bum! We\'re exclusive fishing apparel for the crew. You\'re on the notification list. We\'ll be in touch soon.'
-        })
-      });
-      setSubscribed(true);
-      setEmail('');
-      setTimeout(() => setSubscribed(false), 5000);
-    } catch (error) {
-      console.error('Error subscribing:', error);
-    }
-    setSubscribing(false);
-  };
-
-  const nextSlide = () => {
-    setSlideIndex((prev) => (prev + 1) % crewCatches.length);
-  };
-
-  const prevSlide = () => {
-    setSlideIndex((prev) => (prev - 1 + crewCatches.length) % crewCatches.length);
-  };
+  }, [customerPhotos.length]);
 
   const addToCart = (product) => {
     const existing = cart.find((item) => item.id === product.id);
@@ -93,6 +56,7 @@ export default function LocalBeachBum() {
     } else {
       setCart([...cart, { ...product, qty: 1 }]);
     }
+    setShowCart(true);
   };
 
   const removeFromCart = (productId) => {
@@ -101,180 +65,89 @@ export default function LocalBeachBum() {
 
   const cartTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-  if (!isAuthenticated) {
-    return (
-      <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem', fontFamily: "'Helvetica Neue', sans-serif" }}>
-        <div style={{ background: '#0f0f0f', border: `2px solid ${accentColor}`, borderRadius: '8px', padding: '3rem', maxWidth: '500px', width: '100%', textAlign: 'center' }}>
-          <div style={{ fontSize: '48px', marginBottom: '1.5rem' }}>🎣</div>
-          <h1 style={{ fontSize: '28px', color: accentColor, margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold' }}>Local Beach Bum</h1>
-          <p style={{ color: accentColor, fontSize: '14px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold', borderTop: `1px solid ${accentColor}`, borderBottom: `1px solid ${accentColor}`, padding: '1rem 0' }}>Locals Only</p>
-
-          <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', padding: '2rem', marginBottom: '1.5rem' }}>
-            <p style={{ color: '#ccc', fontSize: '12px', margin: '0 0 1.5rem 0', textTransform: 'uppercase', letterSpacing: '1px' }}>Coming Soon</p>
-
-            <form onSubmit={handleSubscribe} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginBottom: '1.5rem' }}>
-              <div>
-                <input 
-                  type="email" 
-                  value={email} 
-                  onChange={(e) => setEmail(e.target.value)} 
-                  placeholder="Enter your email"
-                  required
-                  disabled={subscribed || subscribing}
-                  style={{ 
-                    width: '100%', 
-                    padding: '0.75rem', 
-                    background: '#0f0f0f', 
-                    border: '1px solid #333', 
-                    borderRadius: '4px', 
-                    color: '#fff', 
-                    fontSize: '14px', 
-                    boxSizing: 'border-box',
-                    opacity: subscribed ? 0.5 : 1
-                  }} 
-                />
-              </div>
-              <button 
-                type="submit" 
-                disabled={subscribing || subscribed}
-                style={{ 
-                  background: subscribed ? '#4ade80' : accentColor, 
-                  color: subscribed ? '#000' : '#0d0d0d', 
-                  border: 'none', 
-                  padding: '0.75rem', 
-                  borderRadius: '4px', 
-                  fontSize: '14px', 
-                  fontWeight: 'bold', 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '1px', 
-                  cursor: subscribing || subscribed ? 'default' : 'pointer',
-                  opacity: subscribing || subscribed ? 0.7 : 1
-                }} 
-                onMouseEnter={(e) => !subscribing && !subscribed && (e.target.style.background = accentColorHover)}
-                onMouseLeave={(e) => !subscribing && !subscribed && (e.target.style.background = accentColor)}
-              >
-                {subscribing ? 'Subscribing...' : subscribed ? '✓ Check Your Email' : 'Get Notified'}
-              </button>
-            </form>
-
-            {authError && <p style={{ color: '#ff6b6b', fontSize: '13px', margin: '1rem 0 0 0', background: 'rgba(255, 107, 107, 0.1)', padding: '0.75rem', borderRadius: '4px', border: '1px solid rgba(255, 107, 107, 0.3)' }}>
-              {authError}
-            </p>}
-
-            {showPasswordField && (
-              <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1.5rem', borderTop: '1px solid #333', paddingTop: '1.5rem' }}>
-                <p style={{ color: '#666', fontSize: '11px', margin: '0 0 1rem 0', textTransform: 'uppercase', letterSpacing: '1px', fontStyle: 'italic' }}>Early Access</p>
-                <div style={{ position: 'relative' }}>
-                  <input 
-                    type={showPassword ? 'text' : 'password'} 
-                    value={password} 
-                    onChange={(e) => setPassword(e.target.value)} 
-                    placeholder="Enter password" 
-                    style={{ 
-                      width: '100%', 
-                      padding: '0.75rem 2.5rem 0.75rem 0.75rem', 
-                      background: '#0f0f0f', 
-                      border: '1px solid #333', 
-                      borderRadius: '4px', 
-                      color: '#fff', 
-                      fontSize: '14px', 
-                      boxSizing: 'border-box' 
-                    }} 
-                  />
-                  <button 
-                    type="button" 
-                    onClick={() => setShowPassword(!showPassword)} 
-                    style={{ 
-                      position: 'absolute', 
-                      right: '0.75rem', 
-                      top: '50%', 
-                      transform: 'translateY(-50%)', 
-                      background: 'none', 
-                      border: 'none', 
-                      color: '#666', 
-                      cursor: 'pointer', 
-                      padding: '0.5rem' 
-                    }}
-                  >
-                    {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                  </button>
-                </div>
-                <button 
-                  type="submit" 
-                  style={{ 
-                    background: '#666', 
-                    color: '#fff', 
-                    border: 'none', 
-                    padding: '0.75rem', 
-                    borderRadius: '4px', 
-                    fontSize: '14px', 
-                    fontWeight: 'bold', 
-                    textTransform: 'uppercase', 
-                    letterSpacing: '1px', 
-                    cursor: 'pointer' 
-                  }} 
-                  onMouseEnter={(e) => (e.target.style.background = '#888')}
-                  onMouseLeave={(e) => (e.target.style.background = '#666')}
-                >
-                  Unlock
-                </button>
-              </form>
-            )}
-          </div>
-
-          <button
-            onClick={() => setShowPasswordField(!showPasswordField)}
-            style={{
-              background: 'none',
-              border: 'none',
-              color: '#555',
-              fontSize: '11px',
-              cursor: 'pointer',
-              textDecoration: 'underline',
-              padding: 0,
-              margin: 0
-            }}
-            onMouseEnter={(e) => (e.target.style.color = '#777')}
-            onMouseLeave={(e) => (e.target.style.color = '#555')}
-          >
-            {showPasswordField ? 'Hide' : 'Early access?'}
-          </button>
-
-          <p style={{ color: '#666', fontSize: '12px', margin: '2rem 0 0 0' }}>Premium fishing apparel for the crew. Monthly drops. Invitation only.</p>
-        </div>
-      </div>
-    );
-  }
+  const handleMenuClick = (itemId) => {
+    setPage(itemId);
+    setMenuOpen(false);
+  };
 
   return (
-    <div style={{ background: '#0d0d0d', color: '#fff', minHeight: '100vh', fontFamily: "'Helvetica Neue', sans-serif" }}>
-      <nav style={{ background: '#1a1a1a', borderBottom: '1px solid #333', padding: '1rem 1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', position: 'sticky', top: 0, zIndex: 100 }}>
-        <button onClick={() => setPage('home')} style={{ fontSize: '16px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor, background: 'none', border: 'none', cursor: 'pointer' }}>LBB</button>
+    <div style={{ background: '#0a0a0a', color: '#fff', minHeight: '100vh', fontFamily: '"Segoe UI", Tahoma, Geneva, Verdana, sans-serif' }}>
+      {/* TOP NAV BAR */}
+      <nav style={{ 
+        background: '#0f0f0f', 
+        borderBottom: '1px solid #222', 
+        padding: '0.75rem 1.5rem', 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        position: 'sticky', 
+        top: 0, 
+        zIndex: 100,
+        backdropFilter: 'blur(10px)',
+        backgroundColor: 'rgba(15, 15, 15, 0.95)'
+      }}>
+        {/* HAMBURGER MENU */}
+        <button 
+          onClick={() => setMenuOpen(!menuOpen)} 
+          style={{ background: 'none', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+        >
+          <Menu size={24} />
+        </button>
 
-        <div style={{ display: 'flex', gap: '2rem', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>
-          {['home', 'shop', 'about', 'community'].map((p) => (
-            <button key={p} onClick={() => setPage(p)} style={{ background: 'none', border: 'none', color: page === p ? accentColor : '#999', cursor: 'pointer', transition: 'color 0.2s', fontSize: '13px' }} onMouseEnter={(e) => (e.target.style.color = page === p ? accentColor : '#ccc')} onMouseLeave={(e) => (e.target.style.color = page === p ? accentColor : '#999')}>
-              {p}
-            </button>
-          ))}
-        </div>
+        {/* LOGO CENTER */}
+        <button 
+          onClick={() => handleMenuClick('home')} 
+          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, margin: 0, display: 'flex', alignItems: 'center' }}
+        >
+          <img src="/images/fish-logo.png" alt="LBB" style={{ width: '60px', height: '60px' }} />
+        </button>
 
-        <button onClick={() => setShowCart(!showCart)} style={{ background: 'none', border: 'none', color: '#999', cursor: 'pointer', fontSize: '20px', position: 'relative' }}>
-          <ShoppingCart size={20} />
-          {cart.length > 0 && <span style={{ position: 'absolute', top: '-8px', right: '-8px', background: accentColor, color: '#0d0d0d', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold' }}>{cart.length}</span>}
+        {/* CART */}
+        <button 
+          onClick={() => setShowCart(!showCart)} 
+          style={{ background: 'none', border: 'none', color: '#f5f5f5', cursor: 'pointer', position: 'relative', padding: 0 }}
+        >
+          <ShoppingCart size={22} />
+          {cart.length > 0 && (
+            <span style={{ position: 'absolute', top: '-8px', right: '-8px', background: '#ff6b35', color: '#fff', width: '20px', height: '20px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '12px', fontWeight: 'bold' }}>
+              {cart.length}
+            </span>
+          )}
         </button>
       </nav>
 
+      {/* DROPDOWN MENU */}
+      {menuOpen && (
+        <div style={{ position: 'fixed', top: '60px', left: 0, right: 0, background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)', borderBottom: '1px solid #222', zIndex: 99, animation: 'slideDown 0.3s ease-out', backdropFilter: 'blur(5px)' }}>
+          <div style={{ padding: '1rem 1.5rem', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+            {menuItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => handleMenuClick(item.id)}
+                style={{ background: page === item.id ? 'rgba(255, 107, 53, 0.1)' : 'none', border: 'none', color: page === item.id ? '#ff6b35' : '#999', padding: '0.75rem 1rem', fontSize: '14px', textTransform: 'uppercase', letterSpacing: '1px', cursor: 'pointer', borderLeft: page === item.id ? '3px solid #ff6b35' : '3px solid transparent', transition: 'all 0.2s' }}
+                onMouseEnter={(e) => { e.target.style.color = '#f5f5f5'; e.target.style.background = 'rgba(255, 255, 255, 0.05)'; }}
+                onMouseLeave={(e) => { e.target.style.color = page === item.id ? '#ff6b35' : '#999'; e.target.style.background = page === item.id ? 'rgba(255, 107, 53, 0.1)' : 'none'; }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* SHOPPING CART SIDEBAR */}
       {showCart && (
-        <div style={{ position: 'fixed', top: 0, right: 0, width: '100%', maxWidth: '400px', height: '100vh', background: '#1a1a1a', borderLeft: '1px solid #333', zIndex: 200, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+        <div style={{ position: 'fixed', top: 0, right: 0, width: '100%', maxWidth: '400px', height: '100vh', background: '#1a1a1a', borderLeft: '1px solid #333', zIndex: 200, display: 'flex', flexDirection: 'column', overflow: 'hidden', boxShadow: '-10px 0 30px rgba(0,0,0,0.5)' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.5rem', borderBottom: '1px solid #333' }}>
-            <h2 style={{ margin: 0, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '1px' }}>Bag</h2>
-            <button onClick={() => setShowCart(false)} style={{ background: 'none', border: 'none', color: '#999', cursor: 'pointer' }}><X size={20} /></button>
+            <h2 style={{ margin: 0, fontSize: '16px', textTransform: 'uppercase', letterSpacing: '1px' }}>Your Bag</h2>
+            <button onClick={() => setShowCart(false)} style={{ background: 'none', border: 'none', color: '#999', cursor: 'pointer' }}>
+              <X size={20} />
+            </button>
           </div>
 
           <div style={{ flex: 1, overflowY: 'auto', padding: '1.5rem' }}>
             {cart.length === 0 ? (
-              <p style={{ color: '#666', textAlign: 'center', marginTop: '2rem' }}>Bag is empty</p>
+              <p style={{ color: '#666', textAlign: 'center', marginTop: '2rem', fontSize: '14px' }}>Bag is empty</p>
             ) : (
               cart.map((item) => (
                 <div key={item.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', paddingBottom: '1rem', borderBottom: '1px solid #333' }}>
@@ -282,7 +155,9 @@ export default function LocalBeachBum() {
                     <p style={{ margin: '0 0 0.5rem 0', fontSize: '14px' }}>{item.name}</p>
                     <p style={{ margin: 0, color: '#999', fontSize: '13px' }}>${item.price} x {item.qty}</p>
                   </div>
-                  <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer' }}><X size={18} /></button>
+                  <button onClick={() => removeFromCart(item.id)} style={{ background: 'none', border: 'none', color: '#666', cursor: 'pointer' }}>
+                    <X size={18} />
+                  </button>
                 </div>
               ))
             )}
@@ -292,48 +167,99 @@ export default function LocalBeachBum() {
             <div style={{ padding: '1.5rem', borderTop: '1px solid #333' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1.5rem', fontSize: '16px', fontWeight: 'bold' }}>
                 <span>Total:</span>
-                <span style={{ color: accentColor }}>${cartTotal.toFixed(2)}</span>
+                <span style={{ color: '#ff6b35' }}>${cartTotal.toFixed(2)}</span>
               </div>
-              <button style={{ width: '100%', background: accentColor, color: '#0d0d0d', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }} onMouseEnter={(e) => (e.target.style.background = accentColorHover)} onMouseLeave={(e) => (e.target.style.background = accentColor)}>Checkout</button>
+              <button style={{ width: '100%', background: '#ff6b35', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }} 
+                onMouseEnter={(e) => (e.target.style.background = '#ff5722')}
+                onMouseLeave={(e) => (e.target.style.background = '#ff6b35')}
+              >
+                Checkout
+              </button>
             </div>
           )}
         </div>
       )}
 
+      {/* HOME PAGE */}
       {page === 'home' && (
         <div>
-          <div style={{ position: 'relative', height: '80vh', background: '#1a1a1a', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', overflow: 'hidden' }}>
-            <div style={{ textAlign: 'center', zIndex: 10 }}>
-              <h1 style={{ fontSize: '48px', margin: '0 0 0.5rem 0', textTransform: 'uppercase', letterSpacing: '4px', color: accentColor, fontWeight: 'bold' }}>Local</h1>
-              <h1 style={{ fontSize: '48px', margin: '0 0 1.5rem 0', textTransform: 'uppercase', letterSpacing: '4px', color: accentColor, fontWeight: 'bold' }}>Beach Bum</h1>
-              <p style={{ fontSize: '16px', margin: '0 0 2rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold', borderTop: `1px solid ${accentColor}`, borderBottom: `1px solid ${accentColor}`, padding: '1rem 0' }}>Locals Only</p>
+          {/* HERO SECTION */}
+          <div style={{ height: '60vh', background: 'linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%)', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', position: 'relative', overflow: 'hidden' }}>
+            <img src="/images/front-page-logo.png" alt="Local Beach Bum" style={{ width: '90vw', maxWidth: '800px', height: 'auto', marginBottom: '2rem', animation: 'float 3s ease-in-out infinite' }} />
+          </div>
 
-              <div style={{ marginBottom: '2rem', animation: 'pulse 2s infinite', fontSize: '120px' }}>🎣</div>
+          {/* CUSTOMER GALLERY */}
+          <div style={{ background: '#0d0d0d', padding: '4rem 1.5rem', position: 'relative' }}>
+            <h2 style={{ fontSize: '24px', margin: '0 0 3rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5', textAlign: 'center' }}>The Crew In Action</h2>
+            
+            <div style={{ maxWidth: '1200px', margin: '0 auto', position: 'relative' }}>
+              <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '2rem', textAlign: 'center', minHeight: '300px', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                {customerPhotos[slideIndex].image ? (
+                  <img src={customerPhotos[slideIndex].image} alt={customerPhotos[slideIndex].caption} style={{ width: '100%', maxWidth: '400px', height: 'auto', marginBottom: '1rem', borderRadius: '4px' }} />
+                ) : (
+                  <div style={{ fontSize: '80px', marginBottom: '1rem' }}>{customerPhotos[slideIndex].emoji}</div>
+                )}
+                <p style={{ fontSize: '18px', margin: '0 0 0.5rem 0', fontWeight: 'bold', color: '#f5f5f5' }}>{customerPhotos[slideIndex].caption}</p>
+                <p style={{ fontSize: '13px', color: '#999' }}>— {customerPhotos[slideIndex].name}</p>
+              </div>
 
-              <h2 style={{ fontSize: '18px', margin: '0 0 0.5rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>{crewCatches[slideIndex].caption}</h2>
-              <p style={{ color: '#999', fontSize: '14px', margin: 0 }}>{crewCatches[slideIndex].by}</p>
-            </div>
+              <button 
+                onClick={() => setSlideIndex((prev) => (prev - 1 + customerPhotos.length) % customerPhotos.length)}
+                style={{ position: 'absolute', left: '-60px', top: '50%', transform: 'translateY(-50%)', background: '#1a1a1a', border: '1px solid #222', color: '#f5f5f5', cursor: 'pointer', padding: '0.75rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={() => setSlideIndex((prev) => (prev + 1) % customerPhotos.length)}
+                style={{ position: 'absolute', right: '-60px', top: '50%', transform: 'translateY(-50%)', background: '#1a1a1a', border: '1px solid #222', color: '#f5f5f5', cursor: 'pointer', padding: '0.75rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <ChevronRight size={20} />
+              </button>
 
-            <button onClick={prevSlide} style={{ position: 'absolute', left: '1.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: `1px solid ${accentColor}`, color: accentColor, cursor: 'pointer', padding: '0.75rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20 }}><ChevronLeft size={24} /></button>
-            <button onClick={nextSlide} style={{ position: 'absolute', right: '1.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(255,255,255,0.1)', border: `1px solid ${accentColor}`, color: accentColor, cursor: 'pointer', padding: '0.75rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 20 }}><ChevronRight size={24} /></button>
-
-            <div style={{ position: 'absolute', bottom: '1.5rem', display: 'flex', gap: '0.5rem', zIndex: 20 }}>
-              {crewCatches.map((_, i) => (
-                <button key={i} onClick={() => setSlideIndex(i)} style={{ width: slideIndex === i ? '24px' : '6px', height: '6px', background: slideIndex === i ? accentColor : '#666', border: 'none', borderRadius: '3px', cursor: 'pointer', transition: 'all 0.3s' }} />
-              ))}
+              <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '2rem' }}>
+                {customerPhotos.map((_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSlideIndex(i)}
+                    style={{ width: slideIndex === i ? '24px' : '8px', height: '8px', background: slideIndex === i ? '#ff6b35' : '#444', border: 'none', borderRadius: '4px', cursor: 'pointer', transition: 'all 0.3s' }}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
-          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
-            <h2 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>Latest Drop</h2>
+          {/* FEATURED PRODUCTS */}
+          <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '4rem 1.5rem' }}>
+            <h2 style={{ fontSize: '24px', margin: '0 0 3rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>Latest Drops</h2>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem' }}>
-              {products.map((product) => (
-                <div key={product.id} style={{ background: '#1a1a1a', border: '1px solid #333', padding: '1.5rem', borderRadius: '4px', textAlign: 'center' }}>
-                  <div style={{ fontSize: '56px', marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{product.image}</div>
-                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>{product.name}</h3>
-                  <p style={{ margin: '0 0 1rem 0', color: accentColor, fontSize: '16px', fontWeight: 'bold' }}>${product.price}</p>
-                  <button onClick={() => addToCart(product)} style={{ width: '100%', background: accentColor, color: '#0d0d0d', border: 'none', padding: '0.5rem', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }} onMouseEnter={(e) => (e.target.style.background = accentColorHover)} onMouseLeave={(e) => (e.target.style.background = accentColor)}>Add</button>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+              {products.slice(0, 4).map((product) => (
+                <div 
+                  key={product.id} 
+                  style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
+                  onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#ff6b35'; e.currentTarget.style.background = '#1f1f1f'; }}
+                  onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
+                >
+                  <img 
+                    src={product.image} 
+                    alt={product.name}
+                    style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
+                  />
+                  <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: '#f5f5f5' }}>
+                    {product.name}
+                  </h3>
+                  <p style={{ margin: '0 0 1rem 0', color: '#ff6b35', fontSize: '16px', fontWeight: 'bold' }}>
+                    ${product.price}
+                  </p>
+                  <button 
+                    onClick={() => addToCart(product)}
+                    disabled={!product.inStock}
+                    style={{ width: '100%', background: product.inStock ? '#ff6b35' : '#444', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: product.inStock ? 'pointer' : 'not-allowed', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }}
+                    onMouseEnter={(e) => product.inStock && (e.target.style.background = '#ff5722')}
+                    onMouseLeave={(e) => product.inStock && (e.target.style.background = '#ff6b35')}
+                  >
+                    {product.inStock ? 'Add to Bag' : 'Out of Stock'}
+                  </button>
                 </div>
               ))}
             </div>
@@ -341,99 +267,135 @@ export default function LocalBeachBum() {
         </div>
       )}
 
+      {/* SHOP PAGE */}
       {page === 'shop' && (
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-          <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>All Products</h1>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+          <h1 style={{ fontSize: '32px', margin: '0 0 3rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>All Products</h1>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '1.5rem' }}>
-            {products.map((product) => (
-              <div key={product.id} style={{ background: '#1a1a1a', border: '1px solid #333', padding: '1.5rem', borderRadius: '4px', textAlign: 'center' }}>
-                <div style={{ fontSize: '56px', marginBottom: '1rem', height: '100px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{product.image}</div>
-                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px' }}>{product.name}</h3>
-                <p style={{ margin: '0 0 1rem 0', color: accentColor, fontSize: '16px', fontWeight: 'bold' }}>${product.price}</p>
-                <button onClick={() => addToCart(product)} style={{ width: '100%', background: accentColor, color: '#0d0d0d', border: 'none', padding: '0.5rem', borderRadius: '3px', cursor: 'pointer', fontSize: '11px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }} onMouseEnter={(e) => (e.target.style.background = accentColorHover)} onMouseLeave={(e) => (e.target.style.background = accentColor)}>Add</button>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+            {products.filter(p => p.inStock).map((product) => (
+              <div 
+                key={product.id} 
+                style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s' }}
+                onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#ff6b35'; e.currentTarget.style.background = '#1f1f1f'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
+              >
+                <img 
+                  src={product.image} 
+                  alt={product.name}
+                  style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
+                />
+                <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: '#f5f5f5' }}>
+                  {product.name}
+                </h3>
+                <p style={{ margin: '0 0 1rem 0', color: '#ff6b35', fontSize: '16px', fontWeight: 'bold' }}>
+                  ${product.price}
+                </p>
+                <button 
+                  onClick={() => addToCart(product)}
+                  style={{ width: '100%', background: '#ff6b35', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }}
+                  onMouseEnter={(e) => (e.target.style.background = '#ff5722')}
+                  onMouseLeave={(e) => (e.target.style.background = '#ff6b35')}
+                >
+                  Add to Bag
+                </button>
               </div>
             ))}
           </div>
         </div>
       )}
 
+      {/* ABOUT PAGE */}
       {page === 'about' && (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-          <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>About Us</h1>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+          <h1 style={{ fontSize: '32px', margin: '0 0 3rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>About Us</h1>
 
-          <div style={{ display: 'grid', gap: '2rem', marginBottom: '2rem' }}>
-            <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '4px', padding: '2rem' }}>
-              <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>Who We Are</h2>
-              <p style={{ margin: 0, color: '#ccc', lineHeight: '1.6', fontSize: '14px' }}>Local Beach Bum is an invitation-only fishing apparel brand built by anglers, for anglers. We're a crew dedicated to premium gear that celebrates beach culture and lifestyle.</p>
+          <div style={{ display: 'grid', gap: '2rem' }}>
+            <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '2rem' }}>
+              <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Who We Are</h2>
+              <p style={{ margin: 0, color: '#ccc', lineHeight: '1.8', fontSize: '14px' }}>Local Beach Bum is an invitation-only fishing apparel brand built by anglers, for anglers. We're a crew dedicated to premium gear that celebrates beach culture and the lifestyle.</p>
             </div>
 
-            <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '4px', padding: '2rem' }}>
-              <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>What We Stand For</h2>
-              <p style={{ margin: 0, color: '#ccc', lineHeight: '1.6', fontSize: '14px' }}>Authenticity, quality, and community. Limited drops. Selective crew. Premium apparel for people who live and breathe fishing.</p>
+            <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '2rem' }}>
+              <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>What We Stand For</h2>
+              <p style={{ margin: 0, color: '#ccc', lineHeight: '1.8', fontSize: '14px' }}>Authenticity, quality, and community. Limited drops. Selective crew. Premium apparel for people who live and breathe fishing and the ocean lifestyle.</p>
             </div>
 
-            <div style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '4px', padding: '2rem' }}>
-              <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>What Fishing Means</h2>
-              <p style={{ margin: 0, color: '#ccc', lineHeight: '1.6', fontSize: '14px' }}>More than catching fish. It's patience, respect for nature, early mornings, golden sunsets, and moments with the crew. A way of being.</p>
+            <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '2rem' }}>
+              <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>What Fishing Means</h2>
+              <p style={{ margin: 0, color: '#ccc', lineHeight: '1.8', fontSize: '14px' }}>More than catching fish. It's patience, respect for nature, early mornings, golden sunsets, and moments with the crew. It's a way of being, a connection to something real and pure.</p>
             </div>
-          </div>
-
-          <div style={{ background: '#1a1a1a', border: `2px solid ${accentColor}`, borderRadius: '4px', padding: '2rem', textAlign: 'center' }}>
-            <p style={{ fontSize: '18px', margin: '0 0 1rem 0', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px', fontWeight: 'bold' }}>Locals Only</p>
-            <p style={{ margin: 0, color: '#999', fontSize: '14px' }}>For the crew that lives and breathes the water.</p>
           </div>
         </div>
       )}
 
+      {/* COMMUNITY PAGE */}
       {page === 'community' && (
-        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '2rem 1.5rem' }}>
-          <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: accentColor }}>Community</h1>
-
-          <div style={{ background: '#1a1a1a', border: `2px solid ${accentColor}`, borderRadius: '4px', padding: '2rem', marginBottom: '3rem' }}>
-            <h2 style={{ margin: '0 0 1rem 0', fontSize: '16px', textTransform: 'uppercase', letterSpacing: '1px', color: accentColor }}>Share Your Catch</h2>
-            <p style={{ color: '#999', margin: '0 0 1.5rem 0', fontSize: '14px' }}>Submit your latest fishing photo to be featured on the homepage.</p>
-
-            <div style={{ background: '#0d0d0d', border: '2px dashed #333', borderRadius: '4px', padding: '2rem', textAlign: 'center', marginBottom: '1.5rem', cursor: 'pointer' }} onMouseEnter={(e) => (e.currentTarget.style.borderColor = accentColor)} onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#333')}>
-              <p style={{ margin: '0 0 1rem 0', fontSize: '40px' }}>📸</p>
-              <p style={{ margin: '0 0 0.5rem 0', fontSize: '14px', fontWeight: 'bold' }}>Upload Photo</p>
-              <p style={{ margin: 0, color: '#666', fontSize: '12px' }}>PNG, JPG or GIF (MAX 5MB)</p>
-            </div>
-
-            <div style={{ display: 'grid', gap: '1rem', marginBottom: '1.5rem' }}>
-              <input type="text" placeholder="Your name" style={{ padding: '0.75rem', background: '#0d0d0d', border: '1px solid #333', borderRadius: '4px', color: '#fff', fontSize: '14px' }} />
-              <input type="text" placeholder="Catch title" style={{ padding: '0.75rem', background: '#0d0d0d', border: '1px solid #333', borderRadius: '4px', color: '#fff', fontSize: '14px' }} />
-              <textarea placeholder="Tell the story (optional)" style={{ padding: '0.75rem', background: '#0d0d0d', border: '1px solid #333', borderRadius: '4px', color: '#fff', fontSize: '14px', minHeight: '80px', fontFamily: 'inherit', resize: 'none' }} />
-            </div>
-
-            <button style={{ width: '100%', background: accentColor, color: '#0d0d0d', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '14px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px' }} onMouseEnter={(e) => (e.target.style.background = accentColorHover)} onMouseLeave={(e) => (e.target.style.background = accentColor)}>Submit</button>
-          </div>
-
-          <div>
-            <h2 style={{ margin: '0 0 1.5rem 0', fontSize: '18px', color: accentColor, textTransform: 'uppercase', letterSpacing: '1px' }}>Featured Catches</h2>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem' }}>
-              {crewCatches.map((pic) => (
-                <div key={pic.id} style={{ background: '#1a1a1a', border: '1px solid #333', borderRadius: '4px', overflow: 'hidden' }}>
-                  <div style={{ fontSize: '60px', height: '140px', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#2a2a2a' }}>{pic.emoji}</div>
-                  <div style={{ padding: '1rem' }}>
-                    <p style={{ margin: '0 0 0.5rem 0', fontSize: '13px', fontWeight: 'bold' }}>{pic.caption}</p>
-                    <p style={{ margin: 0, color: accentColor, fontSize: '12px' }}>{pic.by}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '3rem 1.5rem', textAlign: 'center' }}>
+          <h1 style={{ fontSize: '32px', margin: '0 0 2rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>Community</h1>
+          
+          <div style={{ background: '#1a1a1a', border: '2px solid #ff6b35', borderRadius: '8px', padding: '3rem', textAlign: 'center' }}>
+            <div style={{ fontSize: '60px', marginBottom: '1rem' }}>🚀</div>
+            <h2 style={{ fontSize: '24px', margin: '0 0 1rem 0', color: '#ff6b35', textTransform: 'uppercase', letterSpacing: '1px' }}>Coming Soon</h2>
+            <p style={{ margin: 0, color: '#999', fontSize: '14px', lineHeight: '1.6' }}>
+              The community section is under development. This is where the crew will share catches, stories, and moments together.
+            </p>
           </div>
         </div>
       )}
 
-      <footer style={{ borderTop: '1px solid #333', marginTop: '3rem', padding: '1.5rem', textAlign: 'center', color: '#666', fontSize: '12px' }}>
-        <p style={{ margin: 0 }}>© 2026 Local Beach Bum. Locals Only.</p>
+      {/* SETTINGS PAGE */}
+      {page === 'settings' && (
+        <div style={{ maxWidth: '1000px', margin: '0 auto', padding: '3rem 1.5rem' }}>
+          <h1 style={{ fontSize: '32px', margin: '0 0 3rem 0', textTransform: 'uppercase', letterSpacing: '2px', color: '#f5f5f5' }}>Settings</h1>
+          
+          <div style={{ background: '#1a1a1a', border: '1px solid #222', borderRadius: '8px', padding: '2rem' }}>
+            <p style={{ color: '#999', fontSize: '14px', margin: 0 }}>Settings page - customize your preferences here.</p>
+          </div>
+        </div>
+      )}
+
+      {/* FOOTER */}
+      <footer style={{ borderTop: '1px solid #222', marginTop: '3rem', padding: '2rem', textAlign: 'center', color: '#666', fontSize: '12px' }}>
+        <p style={{ margin: 0 }}>© 2026 Local Beach Bum. Locals Only. 🎣</p>
       </footer>
 
       <style>{`
-        @keyframes pulse {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.05); }
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+
+        @keyframes float {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+
+        ::-webkit-scrollbar {
+          width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+          background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+          background: #333;
+          border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+          background: #555;
         }
       `}</style>
     </div>
