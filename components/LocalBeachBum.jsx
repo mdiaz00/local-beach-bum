@@ -12,6 +12,7 @@ export default function LocalBeachBum() {
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedSize, setSelectedSize] = useState('');
   const [quantity, setQuantity] = useState(1);
+  const [modalImageIndex, setModalImageIndex] = useState(0);
 
   const allPhotos = [
     // { id: 1, emoji: '🎣', name: 'James M.', caption: 'Caught this beauty in the Predator Cap' },
@@ -29,12 +30,12 @@ export default function LocalBeachBum() {
   const customerPhotos = allPhotos.filter(photo => photo.emoji || photo.image);
 
   const products = [
-    { id: 1, name: 'The Predator Cap', price: 32, image: '/images/nav-bar-logo.png', inStock: true, sizes: ['One Size'], description: 'The ultimate fishing cap - designed for serious anglers. Premium quality with superior durability.' },
-    { id: 2, name: 'Tech Fishing Shirt', price: 65, image: '/images/skull-2-shirt.PNG', inStock: true, sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], description: 'Breathable tech fabric keeps you cool all day. UV protection and moisture-wicking technology.' },
-    { id: 3, name: 'Beach Bum Shorts', price: 55, image: '/images/chill-shirt.PNG', inStock: true, sizes: ['S', 'M', 'L', 'XL'], description: 'Comfortable beach shorts perfect for any fishing trip. Quick-dry material and stylish design.' },
-    { id: 4, name: 'Crew Neck Hoodie', price: 85, image: '/images/skull-shirt.PNG', inStock: true, sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], description: 'Stay warm on early morning fishing sessions. Premium comfort with iconic LBB branding.' },
-    { id: 5, name: 'Fishing Hat Collection', price: 48, image: '/images/front-page-logo.png', inStock: false, sizes: ['One Size'], description: 'Exclusive collection featuring multiple hat styles. Limited edition designs for the true angler.' },
-    { id: 6, name: 'UV Protection Gloves', price: 28, image: '/images/fish-logo.png', inStock: true, sizes: ['S', 'M', 'L', 'XL'], description: 'Protect your hands from sun exposure. Lightweight and durable for all-day wear.' },
+    { id: 1, name: 'The Predator Cap', price: 32, images: ['/images/nav-bar-logo.png'], inStock: true, sizes: ['One Size'], description: 'The ultimate fishing cap - designed for serious anglers. Premium quality with superior durability.' },
+    { id: 2, name: 'Tech Fishing Shirt', price: 65, images: ['/images/skull-2-shirt.PNG', '/images/skull-2-shirt.PNG'], inStock: true, sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], description: 'Breathable tech fabric keeps you cool all day. UV protection and moisture-wicking technology.' },
+    { id: 3, name: 'Beach Bum Shorts', price: 55, images: ['/images/chill-shirt.PNG', '/images/chill-shirt.PNG'], inStock: true, sizes: ['S', 'M', 'L', 'XL'], description: 'Comfortable beach shorts perfect for any fishing trip. Quick-dry material and stylish design.' },
+    { id: 4, name: 'Crew Neck Hoodie', price: 85, images: ['/images/skull-shirt.PNG', '/images/skull-shirt.PNG'], inStock: true, sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], description: 'Stay warm on early morning fishing sessions. Premium comfort with iconic LBB branding.' },
+    { id: 5, name: 'Fishing Hat Collection', price: 48, images: ['/images/front-page-logo.png'], inStock: false, sizes: ['One Size'], description: 'Exclusive collection featuring multiple hat styles. Limited edition designs for the true angler.' },
+    { id: 6, name: 'UV Protection Gloves', price: 28, images: ['/images/fish-logo.png'], inStock: true, sizes: ['S', 'M', 'L', 'XL'], description: 'Protect your hands from sun exposure. Lightweight and durable for all-day wear.' },
   ];
 
   const menuItems = [
@@ -143,12 +144,42 @@ export default function LocalBeachBum() {
         <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', zIndex: 250, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div style={{ background: '#1a1a1a', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '2rem', position: 'relative' }}>
             {/* Close Button */}
-            <button onClick={() => { setSelectedProduct(null); setSelectedSize(''); setQuantity(1); }} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#f5f5f5', cursor: 'pointer', fontSize: '24px' }}>
+            <button onClick={() => { setSelectedProduct(null); setSelectedSize(''); setQuantity(1); setModalImageIndex(0); }} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#f5f5f5', cursor: 'pointer', fontSize: '24px', zIndex: 10 }}>
               ✕
             </button>
 
-            {/* Product Image */}
-            <img src={selectedProduct.image} alt={selectedProduct.name} style={{ width: '100%', height: '250px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1.5rem' }} />
+            {/* Product Image Carousel */}
+            <div style={{ position: 'relative', marginBottom: '1.5rem' }}>
+              <img src={selectedProduct.images[modalImageIndex]} alt={selectedProduct.name} style={{ width: '100%', height: '250px', objectFit: 'cover', borderRadius: '4px' }} />
+              
+              {selectedProduct.images.length > 1 && (
+                <>
+                  <button 
+                    onClick={() => setModalImageIndex((prev) => (prev - 1 + selectedProduct.images.length) % selectedProduct.images.length)}
+                    style={{ position: 'absolute', left: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    ‹
+                  </button>
+                  <button 
+                    onClick={() => setModalImageIndex((prev) => (prev + 1) % selectedProduct.images.length)}
+                    style={{ position: 'absolute', right: '0.5rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.5)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.5rem', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                  >
+                    ›
+                  </button>
+
+                  {/* Image Dots */}
+                  <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', marginTop: '0.5rem' }}>
+                    {selectedProduct.images.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setModalImageIndex(i)}
+                        style={{ width: modalImageIndex === i ? '12px' : '8px', height: '8px', background: modalImageIndex === i ? '#ff6b35' : '#555', border: 'none', borderRadius: '4px', cursor: 'pointer', transition: 'all 0.2s' }}
+                      />
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
 
             {/* Product Name */}
             <h2 style={{ fontSize: '28px', margin: '0 0 1rem 0', color: '#f5f5f5', fontWeight: 'bold' }}>{selectedProduct.name}</h2>
@@ -358,7 +389,7 @@ export default function LocalBeachBum() {
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
                 >
                   <img 
-                    src={product.image} 
+                    src={product.images[0]} 
                     alt={product.name}
                     style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem', cursor: 'pointer' }}
                   />
@@ -369,7 +400,7 @@ export default function LocalBeachBum() {
                     ${product.price}
                   </p>
                   <button 
-                    onClick={(e) => { e.stopPropagation(); alert('Clicked ' + product.name); setSelectedProduct(product); }}
+                    onClick={(e) => { e.stopPropagation(); setSelectedProduct(product); }}
                     disabled={!product.inStock}
                     style={{ width: '100%', background: product.inStock ? '#ff6b35' : '#444', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: product.inStock ? 'pointer' : 'not-allowed', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }}
                     onMouseEnter={(e) => product.inStock && (e.target.style.background = '#ff5722')}
@@ -399,7 +430,7 @@ export default function LocalBeachBum() {
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
               >
                 <img 
-                  src={product.image} 
+                  src={product.images[0]} 
                   alt={product.name}
                   style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
                 />
