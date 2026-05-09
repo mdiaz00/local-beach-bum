@@ -9,6 +9,9 @@ export default function LocalBeachBum() {
   const [showCart, setShowCart] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedSize, setSelectedSize] = useState('');
+  const [quantity, setQuantity] = useState(1);
 
   const allPhotos = [
     // { id: 1, emoji: '🎣', name: 'James M.', caption: 'Caught this beauty in the Predator Cap' },
@@ -17,21 +20,21 @@ export default function LocalBeachBum() {
     // { id: 4, emoji: '⚓', name: 'Tyler D.', caption: 'Night vibes with the bum crew' },
     // { id: 5, emoji: '🏖️', name: 'Alex R.', caption: 'Beach bum shorts, perfect fit' },
     // { id: 6, emoji: '🎽', name: 'Chris P.', caption: 'Hoodie saved me from cold mornings' },
-    { id: 7, image: '/images/front-page-image-2.jpeg', name: 'Team Photo', caption: 'Mark - Nice size Sand Bass!' },
-    { id: 8, image: '/images/front-page-image-3.jpeg', name: 'Team Photo', caption: 'Mark - with the solid White Sea Bass' },
-    { id: 9, image: '/images/front-page-image-4.jpeg', name: 'Team Photo', caption: 'Mark - Aboard ArtemisCharters' },
+    { id: 7, image: '/images/front-page-image-2.jpeg', name: 'Team Photo', caption: 'The crew together' },
+    { id: 8, image: '/images/front-page-image-3.jpeg', name: 'Team Photo', caption: 'Out on the water' },
+    { id: 9, image: '/images/front-page-image-4.jpeg', name: 'Team Photo', caption: 'Fishing moments' },
   ];
 
   // Filter only slides that have either emoji or image
   const customerPhotos = allPhotos.filter(photo => photo.emoji || photo.image);
 
   const products = [
-    { id: 1, name: 'The Predator Cap', price: 32, image: '/images/nav-bar-logo.png', inStock: true },
-    { id: 2, name: 'Tech Fishing Shirt', price: 65, image: '/images/skull-2-shirt.PNG', inStock: true },
-    { id: 3, name: 'Beach Bum Shorts', price: 55, image: '/images/chill-shirt.PNG', inStock: true },
-    { id: 4, name: 'Crew Neck Hoodie', price: 85, image: '/images/skull-shirt.PNG', inStock: true },
-    { id: 5, name: 'Fishing Hat Collection', price: 48, image: '/images/front-page-logo.png', inStock: false },
-    { id: 6, name: 'UV Protection Gloves', price: 28, image: '/images/fish-logo.png', inStock: true },
+    { id: 1, name: 'The Predator Cap', price: 32, image: '/images/nav-bar-logo.png', inStock: true, sizes: ['One Size'], description: 'The ultimate fishing cap - designed for serious anglers. Premium quality with superior durability.' },
+    { id: 2, name: 'Tech Fishing Shirt', price: 65, image: '/images/skull-2-shirt.PNG', inStock: true, sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], description: 'Breathable tech fabric keeps you cool all day. UV protection and moisture-wicking technology.' },
+    { id: 3, name: 'Beach Bum Shorts', price: 55, image: '/images/chill-shirt.PNG', inStock: true, sizes: ['S', 'M', 'L', 'XL'], description: 'Comfortable beach shorts perfect for any fishing trip. Quick-dry material and stylish design.' },
+    { id: 4, name: 'Crew Neck Hoodie', price: 85, image: '/images/skull-shirt.PNG', inStock: true, sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL'], description: 'Stay warm on early morning fishing sessions. Premium comfort with iconic LBB branding.' },
+    { id: 5, name: 'Fishing Hat Collection', price: 48, image: '/images/front-page-logo.png', inStock: false, sizes: ['One Size'], description: 'Exclusive collection featuring multiple hat styles. Limited edition designs for the true angler.' },
+    { id: 6, name: 'UV Protection Gloves', price: 28, image: '/images/fish-logo.png', inStock: true, sizes: ['S', 'M', 'L', 'XL'], description: 'Protect your hands from sun exposure. Lightweight and durable for all-day wear.' },
   ];
 
   const menuItems = [
@@ -131,6 +134,119 @@ export default function LocalBeachBum() {
                 {item.label}
               </button>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* PRODUCT DETAIL MODAL */}
+      {selectedProduct && (
+        <div style={{ position: 'fixed', top: 0, left: 0, right: 0, bottom: 0, background: 'rgba(0,0,0,0.7)', zIndex: 250, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div style={{ background: '#1a1a1a', borderRadius: '8px', maxWidth: '600px', width: '100%', maxHeight: '90vh', overflowY: 'auto', padding: '2rem', position: 'relative' }}>
+            {/* Close Button */}
+            <button onClick={() => { setSelectedProduct(null); setSelectedSize(''); setQuantity(1); }} style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'none', border: 'none', color: '#f5f5f5', cursor: 'pointer', fontSize: '24px' }}>
+              ✕
+            </button>
+
+            {/* Product Image */}
+            <img src={selectedProduct.image} alt={selectedProduct.name} style={{ width: '100%', height: '250px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1.5rem' }} />
+
+            {/* Product Name */}
+            <h2 style={{ fontSize: '28px', margin: '0 0 1rem 0', color: '#f5f5f5', fontWeight: 'bold' }}>{selectedProduct.name}</h2>
+
+            {/* Description */}
+            <p style={{ color: '#ccc', fontSize: '14px', marginBottom: '1.5rem', lineHeight: '1.6' }}>{selectedProduct.description}</p>
+
+            {/* Price & Stock */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <span style={{ fontSize: '24px', color: '#ff6b35', fontWeight: 'bold' }}>${selectedProduct.price}</span>
+              <span style={{ fontSize: '14px', color: selectedProduct.inStock ? '#4ade80' : '#ff6b6b' }}>
+                {selectedProduct.inStock ? '✓ In Stock' : '✗ Out of Stock'}
+              </span>
+            </div>
+
+            {/* Size Selection */}
+            {selectedProduct.inStock && (
+              <>
+                <p style={{ fontSize: '14px', color: '#999', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Select Size</p>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+                  {selectedProduct.sizes.map((size) => (
+                    <button
+                      key={size}
+                      onClick={() => setSelectedSize(size)}
+                      style={{ 
+                        padding: '0.75rem 1rem', 
+                        background: selectedSize === size ? '#ff6b35' : '#0f0f0f', 
+                        color: '#f5f5f5', 
+                        border: selectedSize === size ? '1px solid #ff6b35' : '1px solid #333',
+                        borderRadius: '4px', 
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 'bold'
+                      }}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Quantity Selection */}
+                <p style={{ fontSize: '14px', color: '#999', marginBottom: '0.5rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Quantity</p>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center', marginBottom: '1.5rem' }}>
+                  <button onClick={() => setQuantity(Math.max(1, quantity - 1))} style={{ background: '#0f0f0f', border: '1px solid #333', color: '#f5f5f5', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}>−</button>
+                  <span style={{ fontSize: '16px', fontWeight: 'bold', minWidth: '30px', textAlign: 'center' }}>{quantity}</span>
+                  <button onClick={() => setQuantity(quantity + 1)} style={{ background: '#0f0f0f', border: '1px solid #333', color: '#f5f5f5', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer' }}>+</button>
+                </div>
+
+                {/* Action Buttons */}
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  <button
+                    onClick={() => {
+                      if (selectedSize) {
+                        addToCart({ ...selectedProduct, selectedSize, qty: quantity });
+                        setSelectedProduct(null);
+                        setSelectedSize('');
+                        setQuantity(1);
+                      }
+                    }}
+                    disabled={!selectedSize}
+                    style={{ 
+                      flex: 1, 
+                      background: selectedSize ? '#ff6b35' : '#444', 
+                      color: '#fff', 
+                      border: 'none', 
+                      padding: '0.75rem', 
+                      borderRadius: '4px', 
+                      cursor: selectedSize ? 'pointer' : 'not-allowed',
+                      fontSize: '14px', 
+                      fontWeight: 'bold',
+                      textTransform: 'uppercase',
+                      letterSpacing: '1px'
+                    }}
+                  >
+                    Add to Cart
+                  </button>
+                </div>
+              </>
+            )}
+            {!selectedProduct.inStock && (
+              <button
+                onClick={() => setSelectedProduct(null)}
+                style={{ 
+                  width: '100%', 
+                  background: '#0f0f0f', 
+                  color: '#f5f5f5', 
+                  border: '1px solid #333',
+                  padding: '0.75rem', 
+                  borderRadius: '4px', 
+                  cursor: 'pointer',
+                  fontSize: '14px', 
+                  fontWeight: 'bold',
+                  textTransform: 'uppercase'
+                }}
+              >
+                Close
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -236,6 +352,7 @@ export default function LocalBeachBum() {
               {products.slice(0, 4).map((product) => (
                 <div 
                   key={product.id} 
+                  onClick={() => setSelectedProduct(product)}
                   style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
                   onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#ff6b35'; e.currentTarget.style.background = '#1f1f1f'; }}
                   onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
@@ -243,7 +360,7 @@ export default function LocalBeachBum() {
                   <img 
                     src={product.image} 
                     alt={product.name}
-                    style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem' }}
+                    style={{ width: '100%', height: '150px', objectFit: 'cover', borderRadius: '4px', marginBottom: '1rem', cursor: 'pointer' }}
                   />
                   <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '1px', color: '#f5f5f5' }}>
                     {product.name}
@@ -252,13 +369,13 @@ export default function LocalBeachBum() {
                     ${product.price}
                   </p>
                   <button 
-                    onClick={() => addToCart(product)}
+                    onClick={(e) => { e.stopPropagation(); alert('Clicked ' + product.name); setSelectedProduct(product); }}
                     disabled={!product.inStock}
                     style={{ width: '100%', background: product.inStock ? '#ff6b35' : '#444', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: product.inStock ? 'pointer' : 'not-allowed', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }}
                     onMouseEnter={(e) => product.inStock && (e.target.style.background = '#ff5722')}
                     onMouseLeave={(e) => product.inStock && (e.target.style.background = '#ff6b35')}
                   >
-                    {product.inStock ? 'Add to Bag' : 'Out of Stock'}
+                    {product.inStock ? 'View Details' : 'Out of Stock'}
                   </button>
                 </div>
               ))}
@@ -276,7 +393,8 @@ export default function LocalBeachBum() {
             {products.filter(p => p.inStock).map((product) => (
               <div 
                 key={product.id} 
-                style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s' }}
+                style={{ background: '#1a1a1a', border: '1px solid #222', padding: '2rem 1.5rem', borderRadius: '8px', textAlign: 'center', transition: 'all 0.3s', cursor: 'pointer' }}
+                onClick={() => setSelectedProduct(product)}
                 onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#ff6b35'; e.currentTarget.style.background = '#1f1f1f'; }}
                 onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#222'; e.currentTarget.style.background = '#1a1a1a'; }}
               >
@@ -292,12 +410,12 @@ export default function LocalBeachBum() {
                   ${product.price}
                 </p>
                 <button 
-                  onClick={() => addToCart(product)}
+                  onClick={(e) => { e.stopPropagation(); addToCart(product); }}
                   style={{ width: '100%', background: '#ff6b35', color: '#fff', border: 'none', padding: '0.75rem', borderRadius: '4px', cursor: 'pointer', fontSize: '12px', fontWeight: 'bold', textTransform: 'uppercase', letterSpacing: '1px', transition: 'all 0.2s' }}
                   onMouseEnter={(e) => (e.target.style.background = '#ff5722')}
                   onMouseLeave={(e) => (e.target.style.background = '#ff6b35')}
                 >
-                  Add to Bag
+                  View Details
                 </button>
               </div>
             ))}
