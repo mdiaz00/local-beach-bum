@@ -400,7 +400,7 @@ export default function LocalBeachBum() {
                     {product.images.length > 1 && (
                       <>
                         <button 
-                          onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: (homeProductImageIndex[product.id] || 0) - 1 + product.images.length) % product.images.length}); }}
+                          onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: ((homeProductImageIndex[product.id] || 0) - 1 + product.images.length) % product.images.length}); }}
                           style={{ position: 'absolute', left: '0.25rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '12px' }}
                         >
                           ‹
@@ -473,7 +473,7 @@ export default function LocalBeachBum() {
                   {product.images.length > 1 && (
                     <>
                       <button 
-                        onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: (homeProductImageIndex[product.id] || 0) - 1 + product.images.length) % product.images.length}); }}
+                        onClick={(e) => { e.stopPropagation(); setHomeProductImageIndex({...homeProductImageIndex, [product.id]: ((homeProductImageIndex[product.id] || 0) - 1 + product.images.length) % product.images.length}); }}
                         style={{ position: 'absolute', left: '0.25rem', top: '50%', transform: 'translateY(-50%)', background: 'rgba(0,0,0,0.6)', border: 'none', color: '#f5f5f5', cursor: 'pointer', padding: '0.25rem 0.5rem', borderRadius: '4px', fontSize: '12px' }}
                       >
                         ‹
